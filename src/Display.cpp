@@ -31,7 +31,7 @@ int Display::IsInitialized() const {
     return 0;
 }
 
-void Display::PollAndRender(const Screen &screen) const {
+void Display::PollAndRender() const {
     //Event handler
     SDL_Event e;
     bool quit{};
@@ -43,19 +43,19 @@ void Display::PollAndRender(const Screen &screen) const {
             }
         }
 
-        Render(screen);
+        Render();
 
         SDL_Delay(5000);
         quit = true;
     }
 }
 
-void Display::Render(const Screen &screen) const {
+void Display::Render() const {
     SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer_);
     SDL_SetRenderDrawColor(renderer_, 0x00, 0x00, 0x00, 0xFF);
     int x = 0;
-    for (const auto &pixels_column: screen) {
+    for (const auto &pixels_column: screen_) {
         int y = 0;
         for (const auto pixel: pixels_column) {
             if (pixel) {
@@ -68,4 +68,8 @@ void Display::Render(const Screen &screen) const {
     }
 
     SDL_RenderPresent(renderer_);
+}
+
+void Display::Clear() {
+    screen_ = {};
 }

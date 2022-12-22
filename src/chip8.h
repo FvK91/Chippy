@@ -1,5 +1,7 @@
 #pragma once
 
+#include "display.h"
+
 #include <array>
 
 using font = std::array<u_int16_t, 80>;
@@ -29,7 +31,11 @@ namespace chip8 {
             std::copy(f.begin(), f.begin() + sizeof(f), RAM_.begin() + 0x50);
         }
 
+        int Run(const u_int16_t ips);
+
     private:
+        void Fetch();
+
         std::array<u_int8_t, 4096> RAM_{};
         std::array<u_int8_t, 16> registers_; // 0 through F
         u_int16_t I_; // I register
@@ -37,13 +43,14 @@ namespace chip8 {
         u_int8_t delay_timer_;
         u_int8_t sound_timer_;
 
-        u_int16_t PC_; // Program Counter, pointing to current instruction in memory
+        int16_t PC_; // Program Counter, pointing to current instruction in memory
 
         // Stack
         u_int8_t SP_; // Stack pointer, pointing to top-level of stack
         std::array<u_int16_t, 16> stack_;
 
         // Display
+        Display display_;
     };
 
 } // chip8

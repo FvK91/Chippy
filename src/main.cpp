@@ -1,11 +1,13 @@
 #include <iostream>
 
 #include "chip8.h"
-#include "Display.h"
 
 int main(int argc, char *argv[]) {
 
     chip8::Interpreter chip8_interpreter;
+    chip8_interpreter.Run(100);
+
+    return 0;
 
     Display display{};
     if (display.IsInitialized() == 0) {

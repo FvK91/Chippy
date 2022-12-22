@@ -21,13 +21,16 @@ public:
 
     int IsInitialized() const;
 
-    void PollAndRender(const Screen &screen) const;
+    void PollAndRender() const;
+
+    void Clear();
 
 private:
-    void Render(const Screen &screen) const;
+    void Render() const;
 
     SDL_Window *window_;
 
     SDL_Renderer *renderer_;
 
+    Screen screen_;
 };
