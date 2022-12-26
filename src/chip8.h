@@ -1,8 +1,10 @@
 #pragma once
 
 #include "display.h"
+#include "stack.h"
 
 #include <array>
+#include <filesystem>
 
 using font = std::array<u_int16_t, 80>;
 constexpr font f = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -31,10 +33,12 @@ namespace chip8 {
             std::copy(f.begin(), f.begin() + sizeof(f), RAM_.begin() + 0x50);
         }
 
-        int Run(const u_int16_t ips);
+        int Run(const std::filesystem::path& path, const u_int16_t ips);
 
     private:
         void Fetch();
+
+        int LoadROM(const std::filesystem::path& path);
 
         std::array<u_int8_t, 4096> RAM_{};
         std::array<u_int8_t, 16> registers_; // 0 through F
@@ -46,8 +50,7 @@ namespace chip8 {
         int16_t PC_; // Program Counter, pointing to current instruction in memory
 
         // Stack
-        u_int8_t SP_; // Stack pointer, pointing to top-level of stack
-        std::array<u_int16_t, 16> stack_;
+        stack stack_;
 
         // Display
         Display display_;
