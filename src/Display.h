@@ -19,14 +19,15 @@ public:
 
     ~Display();
 
-    int IsInitialized() const;
+    bool IsInitialized() const;
 
-    void PollAndRender() const;
+    void SetPixel(const uint8_t x, const uint8_t y) const;
+
+    void Render() const;
 
     void Clear();
 
 private:
-    void Render() const;
 
     SDL_Window *window_;
 

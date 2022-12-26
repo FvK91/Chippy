@@ -4,8 +4,14 @@
 
 Display::Display() {
     SDL_Init(SDL_INIT_VIDEO);
-    window_ = SDL_CreateWindow("Chippy - a CHIP-8 interpreter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                               SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    window_ = SDL_CreateWindow(
+            "Chippy - a CHIP-8 interpreter",
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            SDL_WINDOW_SHOWN
+            );
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 }
 
@@ -14,10 +20,10 @@ Display::~Display() {
     SDL_Quit();
 }
 
-int Display::IsInitialized() const {
+bool Display::IsInitialized() const {
     auto report = [](const auto &message, const auto sdl_error) {
         std::cerr << message << "\n SDL Error: " << sdl_error << '\n';
-        return 1;
+        return false;
     };
     if (!SDL_WasInit(SDL_INIT_VIDEO)) {
         return report("SDL could not be initialized.", SDL_GetError());
@@ -28,27 +34,32 @@ int Display::IsInitialized() const {
     if (!renderer_) {
         return report("Renderer could not be created", SDL_GetError());
     }
-    return 0;
+    return true;
 }
 
-void Display::PollAndRender() const {
-    //Event handler
-    SDL_Event e;
-    bool quit{};
-    while (!quit) {
-        //Handle events on queue
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
+void Display::SetPixel(const uint8_t x, const uint8_t y) const {
 
-        Render();
-
-        SDL_Delay(5000);
-        quit = true;
-    }
 }
+
+
+//void Display::PollAndRender() const {
+//    //Event handler
+//    SDL_Event e;
+//    bool quit{};
+//    while (!quit) {
+//        //Handle events on queue
+//        while (SDL_PollEvent(&e) != 0) {
+//            if (e.type == SDL_QUIT) {
+//                quit = true;
+//            }
+//        }
+//
+//        Render();
+//
+//        SDL_Delay(5000);
+//        quit = true;
+//    }
+//}
 
 void Display::Render() const {
     SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);

@@ -5,6 +5,12 @@
 int main(int argc, char *argv[]) {
 
     chip8::Interpreter chip8_interpreter;
+
+    if (!chip8_interpreter.GetDisp().IsInitialized()) {
+        std::cerr << "Display could not be initialized, aborting program.";
+        return 1;
+    }
+
     chip8_interpreter.Run("../dat/IBM_Logo.ch8", 100);
 
     return 0;
@@ -20,10 +26,10 @@ int main(int argc, char *argv[]) {
             screen[x][5] = 1;
         }
 
-        // display.PollAndRender(screen);
+        // display.PollAndRender();
     }
     else {
-        std::cerr << "Display could not be initialized, aborting program.";
+
     }
 
     return 0;

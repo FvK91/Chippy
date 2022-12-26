@@ -8,6 +8,10 @@
 namespace chip8 {
     using namespace std::chrono;
 
+    const Display &Interpreter::GetDisp() const {
+        return display_;
+    }
+
     // Run interpreter a certain ips (instructions per second)
     int Interpreter::Run(const std::filesystem::path& path, const u_int16_t ips) {
         // Load ROM-file into memory
@@ -20,13 +24,25 @@ namespace chip8 {
         auto next = std::chrono::steady_clock::now();
         auto prev = next - delay;
 
-        while(true) {
+        bool quit = false;
+        SDL_Event e;
+        while(!quit) {
             auto now = std::chrono::steady_clock::now();
-            std::cout << ((now-prev) / 1ms) << '\n';
+            // std::cout << ((now-prev) / 1ms) << '\n';
             prev = now;
 
+            // Poll for SDL events
+            while (SDL_PollEvent(&e) != 0) {
+                if (e.type == SDL_QUIT) {
+                    quit = true;
+                }
+            }
+
             // Main 3 tasks: Fetch -> Decode -> Execute
-            Fetch();
+            ExecuteInstruction();
+
+            // Render display
+            display_.Render();
 
             // Sleep until next
             next += delay;
@@ -58,7 +74,7 @@ namespace chip8 {
     }
 
 
-    void Interpreter::Fetch() {
+    void Interpreter::ExecuteInstruction() {
         // Fetch the instruction from memory at the current PC (program counter)
         // Read two successive bytes from memory and combine them into one 16-bit instruction
         const auto nibble_1 = RAM_[PC_] & 0xf;

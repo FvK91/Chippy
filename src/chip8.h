@@ -35,8 +35,10 @@ namespace chip8 {
 
         int Run(const std::filesystem::path& path, const u_int16_t ips);
 
+        const Display& GetDisp() const;
+
     private:
-        void Fetch();
+        void ExecuteInstruction();
 
         int LoadROM(const std::filesystem::path& path);
 
