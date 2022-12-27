@@ -83,8 +83,8 @@ namespace chip8 {
             // We increment PC_ here already: next instruction
             PC_ += 2;
 
-            std::cout << "Handling instruction: " << "0x" << std::hex << i() << '\n';
-            std::cout << "Nibble1 " << std::to_string(i.Nibble1()) << '\n';
+            // std::cout << "Handling instruction: " << "0x" << std::hex << i() << '\n';
+            // std::cout << "Nibble1 " << std::to_string(i.Nibble1()) << '\n';
 
             // Execute instruction
             ExecuteInstruction(i);
@@ -130,12 +130,44 @@ namespace chip8 {
                 display_.Clear();
                 return;
             }
+            case 0x00EE:
+            {
+                PC_ = stack_.Pop();
+                return;
+            }
         }
 
         switch (i.Nibble1()) {
             case 0x1: // Jump
             {
                 PC_ = i.Nibble234();
+                return;
+            }
+            case 0x2: // Push PC to stack + jump
+            {
+                stack_.Push(PC_);
+                PC_ = i.Nibble234();
+                return;
+            }
+            case 0x3:
+            {
+                if (registers_[i.Nibble2()] == i.SecondByte()) {
+                    PC_ += 2; // Skip
+                }
+                return;
+            }
+            case 0x4:
+            {
+                if (registers_[i.Nibble2()] != i.SecondByte()) {
+                    PC_ += 2; // Skip
+                }
+                return;
+            }
+            case 0x5:
+            {
+                if (registers_[i.Nibble2()] == registers_[i.Nibble3()]) {
+                    PC_ += 2; // Skip
+                }
                 return;
             }
             case 0x6: // Set VX
@@ -146,6 +178,17 @@ namespace chip8 {
             case 0x7: // Add to VX
             {
                 registers_[i.Nibble2()] += i.SecondByte();
+                return;
+            }
+            case 0x8:
+            {
+                
+            }
+            case 0x9:
+            {
+                if (registers_[i.Nibble2()] != registers_[i.Nibble3()]) {
+                    PC_ += 2; // Skip
+                }
                 return;
             }
             case 0xA: // Set I;

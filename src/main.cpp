@@ -11,25 +11,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    chip8_interpreter.Run("../dat/IBM_Logo.ch8", 100);
-
-    return 0;
-
-    Display display{};
-    if (display.IsInitialized() == 0) {
-        Display::Screen screen{};
-
-        for (int y = 0; y < PIXELS_Y; ++y) {
-            screen[5][y] = 1;
-        }
-        for (int x = 0; x < PIXELS_X; ++x) {
-            screen[x][5] = 1;
-        }
-
-        // display.PollAndRender();
-    } else {
-
-    }
+    chip8_interpreter.Run("../dat/test_opcode.ch8", 1500);
 
     return 0;
 }
