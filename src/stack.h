@@ -11,6 +11,7 @@ namespace chip8 {
         void Push(const u_int16_t addr);
 
         u_int16_t Pop();
+
     private:
         u_int8_t SP_{}; // Stack pointer, pointing to top-level of stack
 

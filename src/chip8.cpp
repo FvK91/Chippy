@@ -6,10 +6,9 @@
 #include <thread>
 
 namespace chip8 {
-    Instruction::Instruction(u_int8_t first_byte, u_int8_t second_byte)  :
+    Instruction::Instruction(u_int8_t first_byte, u_int8_t second_byte) :
             first_byte_(first_byte),
-            second_byte_(second_byte)
-    {}
+            second_byte_(second_byte) {}
 
     u_int8_t Instruction::FirstByte() const {
         return first_byte_;
@@ -50,7 +49,7 @@ namespace chip8 {
     }
 
     // Run interpreter a certain ips (instructions per second)
-    int Interpreter::Run(const std::filesystem::path& path, const u_int16_t ips) {
+    int Interpreter::Run(const std::filesystem::path &path, const u_int16_t ips) {
         // Load ROM-file into memory
         if (LoadROM(path) != 0) {
             return 1;
@@ -66,7 +65,7 @@ namespace chip8 {
 
         bool quit = false;
         SDL_Event e;
-        while(!quit) {
+        while (!quit) {
             auto now = std::chrono::steady_clock::now();
             //std::cout << ((now-prev) / 1ms) << '\n';
             prev = now;
@@ -102,15 +101,15 @@ namespace chip8 {
     }
 
 
-    int Interpreter::LoadROM(const std::filesystem::path& path) {
+    int Interpreter::LoadROM(const std::filesystem::path &path) {
         std::ifstream rom(path, std::ios::in);
 
-        if(!rom) {
+        if (!rom) {
             return 1;
         }
 
         auto addr = 0x200;
-        while(!rom.eof()) {
+        while (!rom.eof()) {
             RAM_[addr++] = rom.get();
         }
         rom.close();
@@ -120,7 +119,7 @@ namespace chip8 {
 
 
     Instruction Interpreter::FetchInstruction() const {
-        return { RAM_[PC_], RAM_[PC_ + 1]};
+        return {RAM_[PC_], RAM_[PC_ + 1]};
     }
 
 
@@ -154,8 +153,7 @@ namespace chip8 {
                 I_ = i.Nibble234();
                 return;
             }
-            case 0xD:
-            {
+            case 0xD: {
                 // Wrap when going over the edge of screen
                 const auto X = registers_[i.Nibble2()] % PIXELS_X;
                 auto y = registers_[i.Nibble3()] % PIXELS_Y;
@@ -167,14 +165,14 @@ namespace chip8 {
                     for (auto bit = 7; bit >= 0; --bit) {
                         if (sprite & (1 << bit)) {
                             // std::cout << "Flip pixel: " << x << " " << y << '\n';
-                            if (display_.FlipPixel(x,y)) {
+                            if (display_.FlipPixel(x, y)) {
                                 VF_ = 1;
                             }
                         }
                         ++x;
 
                         // End of screen check
-                        if ( x > PIXELS_X - 1) {
+                        if (x > PIXELS_X - 1) {
                             break;
                         }
                     }

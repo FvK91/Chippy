@@ -20,15 +20,14 @@ int main(int argc, char *argv[]) {
         Display::Screen screen{};
 
         for (int y = 0; y < PIXELS_Y; ++y) {
-           screen[5][y] = 1;
+            screen[5][y] = 1;
         }
         for (int x = 0; x < PIXELS_X; ++x) {
             screen[x][5] = 1;
         }
 
         // display.PollAndRender();
-    }
-    else {
+    } else {
 
     }
 

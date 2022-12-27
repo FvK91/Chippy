@@ -11,7 +11,7 @@ Display::Display() {
             SCREEN_WIDTH,
             SCREEN_HEIGHT,
             SDL_WINDOW_SHOWN
-            );
+    );
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 }
 
@@ -41,26 +41,6 @@ bool Display::FlipPixel(const uint8_t x, const uint8_t y) {
     screen_[x][y] = !screen_[x][y];
     return screen_[x][y] == 0;
 }
-
-
-//void Display::PollAndRender() const {
-//    //Event handler
-//    SDL_Event e;
-//    bool quit{};
-//    while (!quit) {
-//        //Handle events on queue
-//        while (SDL_PollEvent(&e) != 0) {
-//            if (e.type == SDL_QUIT) {
-//                quit = true;
-//            }
-//        }
-//
-//        Render();
-//
-//        SDL_Delay(5000);
-//        quit = true;
-//    }
-//}
 
 void Display::Render() const {
     SDL_SetRenderDrawColor(renderer_, 0x00, 0x00, 0x00, 0xFF);

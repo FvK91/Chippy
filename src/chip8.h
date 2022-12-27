@@ -58,16 +58,16 @@ namespace chip8 {
             std::copy(f.begin(), f.begin() + sizeof(f), RAM_.begin() + 0x50);
         }
 
-        int Run(const std::filesystem::path& path, const u_int16_t ips);
+        int Run(const std::filesystem::path &path, const u_int16_t ips);
 
-        const Display& GetDisp() const;
+        const Display &GetDisp() const;
 
     private:
         Instruction FetchInstruction() const;
 
         void ExecuteInstruction(Instruction i);
 
-        int LoadROM(const std::filesystem::path& path);
+        int LoadROM(const std::filesystem::path &path);
 
         std::array<u_int8_t, 4096> RAM_{};
         std::array<u_int8_t, 16> registers_{}; // 0 through F
