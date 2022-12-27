@@ -26,6 +26,31 @@ constexpr font f = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 };
 
 namespace chip8 {
+    class Instruction {
+    public:
+        Instruction(u_int8_t first_byte, u_int8_t second_byte);
+
+        u_int8_t FirstByte() const;
+
+        u_int8_t SecondByte() const;
+
+        u_int8_t Nibble1() const;
+
+        u_int8_t Nibble2() const;
+
+        u_int8_t Nibble3() const;
+
+        u_int8_t Nibble4() const;
+
+        u_int16_t Nibble234() const;
+
+        u_int16_t operator()() const;
+
+    private:
+        u_int8_t first_byte_{};
+
+        u_int8_t second_byte_{};
+    };
 
     class Interpreter {
     public:
@@ -38,24 +63,26 @@ namespace chip8 {
         const Display& GetDisp() const;
 
     private:
-        void ExecuteInstruction();
+        Instruction FetchInstruction() const;
+
+        void ExecuteInstruction(Instruction i);
 
         int LoadROM(const std::filesystem::path& path);
 
         std::array<u_int8_t, 4096> RAM_{};
-        std::array<u_int8_t, 16> registers_; // 0 through F
-        u_int16_t I_; // I register
-        u_int8_t VF_; // Flag register, used as a flag by some instructions
-        u_int8_t delay_timer_;
-        u_int8_t sound_timer_;
+        std::array<u_int8_t, 16> registers_{}; // 0 through F
+        u_int16_t I_{}; // I register
+        u_int8_t VF_{}; // Flag register, used as a flag by some instructions
+        u_int8_t delay_timer_{};
+        u_int8_t sound_timer_{};
 
-        int16_t PC_; // Program Counter, pointing to current instruction in memory
+        int16_t PC_{}; // Program Counter, pointing to current instruction in memory
 
         // Stack
-        stack stack_;
+        stack stack_{};
 
         // Display
-        Display display_;
+        Display display_{};
     };
 
 } // chip8

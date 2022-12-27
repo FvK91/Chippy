@@ -37,8 +37,9 @@ bool Display::IsInitialized() const {
     return true;
 }
 
-void Display::SetPixel(const uint8_t x, const uint8_t y) const {
-
+bool Display::FlipPixel(const uint8_t x, const uint8_t y) {
+    screen_[x][y] = !screen_[x][y];
+    return screen_[x][y] == 0;
 }
 
 
@@ -62,9 +63,9 @@ void Display::SetPixel(const uint8_t x, const uint8_t y) const {
 //}
 
 void Display::Render() const {
-    SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(renderer_);
     SDL_SetRenderDrawColor(renderer_, 0x00, 0x00, 0x00, 0xFF);
+    SDL_RenderClear(renderer_);
+    SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
     int x = 0;
     for (const auto &pixels_column: screen_) {
         int y = 0;

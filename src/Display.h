@@ -21,7 +21,7 @@ public:
 
     bool IsInitialized() const;
 
-    void SetPixel(const uint8_t x, const uint8_t y) const;
+    bool FlipPixel(const uint8_t x, const uint8_t y); // Returns true when flipped off
 
     void Render() const;
 
@@ -29,9 +29,9 @@ public:
 
 private:
 
-    SDL_Window *window_;
+    SDL_Window *window_{};
 
-    SDL_Renderer *renderer_;
+    SDL_Renderer *renderer_{};
 
-    Screen screen_;
+    Screen screen_{};
 };
