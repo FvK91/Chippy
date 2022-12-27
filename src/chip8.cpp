@@ -6,9 +6,8 @@
 #include <thread>
 
 namespace chip8 {
-    Instruction::Instruction(u_int8_t first_byte, u_int8_t second_byte) :
-            first_byte_(first_byte),
-            second_byte_(second_byte) {}
+    Instruction::Instruction(u_int8_t first_byte, u_int8_t second_byte) : first_byte_(first_byte),
+                                                                          second_byte_(second_byte) {}
 
     u_int8_t Instruction::FirstByte() const {
         return first_byte_;
@@ -130,8 +129,7 @@ namespace chip8 {
                 display_.Clear();
                 return;
             }
-            case 0x00EE:
-            {
+            case 0x00EE: {
                 PC_ = stack_.Pop();
                 return;
             }
@@ -149,22 +147,19 @@ namespace chip8 {
                 PC_ = i.Nibble234();
                 return;
             }
-            case 0x3:
-            {
+            case 0x3: {
                 if (registers_[i.Nibble2()] == i.SecondByte()) {
                     PC_ += 2; // Skip
                 }
                 return;
             }
-            case 0x4:
-            {
+            case 0x4: {
                 if (registers_[i.Nibble2()] != i.SecondByte()) {
                     PC_ += 2; // Skip
                 }
                 return;
             }
-            case 0x5:
-            {
+            case 0x5: {
                 if (registers_[i.Nibble2()] == registers_[i.Nibble3()]) {
                     PC_ += 2; // Skip
                 }
@@ -180,12 +175,63 @@ namespace chip8 {
                 registers_[i.Nibble2()] += i.SecondByte();
                 return;
             }
-            case 0x8:
-            {
-                
+            case 0x8: {
+                switch (i.Nibble4()) {
+                    case 0x0: // Set
+                    {
+                        registers_[i.Nibble2()] = i.Nibble3();
+                        return;
+                    }
+                    case 0x1: // Binary OR
+                    {
+                        registers_[i.Nibble2()] |= registers_[i.Nibble3()];
+                        return;
+                    }
+                    case 0x2: // Binary AND
+                    {
+                        registers_[i.Nibble2()] &= registers_[i.Nibble3()];
+                        return;
+                    }
+                    case 0x3: // Logical XOR
+                    {
+                        registers_[i.Nibble2()] ^= registers_[i.Nibble3()];
+                        return;
+                    }
+                    case 0x4: // Add
+                    {
+                        registers_[i.Nibble2()] += registers_[i.Nibble3()];
+                        return;
+                    }
+                    case 0x5: // Subtract 1
+                    {
+                        if (registers_[i.Nibble2()] > registers_[i.Nibble3()]) {
+                            VF_ = 1;
+                        } else {
+                            VF_ = 0;
+                        }
+                        registers_[i.Nibble2()] -= registers_[i.Nibble3()];
+                        return;
+                    }
+                    case 0x6: {
+                        // Todo
+                    }
+                    case 0x7: // Subtract 2
+                    {
+                        if(registers_[i.Nibble3()] > registers_[i.Nibble2()]) {
+                            VF_ = 1;
+                        } else {
+                            VF_ = 0;
+                        }
+                        registers_[i.Nibble2()] = registers_[i.Nibble3()] - registers_[i.Nibble2()];
+                        return;
+                    }
+                    case 0xE: {
+                        // Todo
+                    }
+                }
+                break;
             }
-            case 0x9:
-            {
+            case 0x9: {
                 if (registers_[i.Nibble2()] != registers_[i.Nibble3()]) {
                     PC_ += 2; // Skip
                 }
