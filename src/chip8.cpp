@@ -290,14 +290,22 @@ namespace chip8 {
             }
             case 0xE:
             {
-                switch(i.Nibble3()) {
-                    case 0x9:
+                switch(i.Nibble3())
+                {
+                    case 0x9E:
                     {
+                        if(keypad_.KeyDown(registers_[i.Nibble2()]))
+                        {
+                            PC_ += 2; // Skip
+                        }
                         return;
                     }
-                    case 0xA:
+                    case 0xA1:
                     {
-
+                        if(!keypad_.KeyDown(registers_[i.Nibble2()]))
+                        {
+                            PC_ += 2; // Skip
+                        }
                         return;
                     }
                 }
