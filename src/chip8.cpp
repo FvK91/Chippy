@@ -213,11 +213,16 @@ namespace chip8 {
                         return;
                     }
                     case 0x6: {
-                        // Todo
+                        if (config_.shift_set_VY_) {
+                            registers_[i.Nibble2()] = registers_[i.Nibble3()];
+                        }
+                        VF_ = (1 & registers_[i.Nibble2()]) ? 1 : 0;
+                        registers_[i.Nibble2()] = registers_[i.Nibble2()] >> 1;
+                        return;
                     }
                     case 0x7: // Subtract 2
                     {
-                        if(registers_[i.Nibble3()] > registers_[i.Nibble2()]) {
+                        if (registers_[i.Nibble3()] > registers_[i.Nibble2()]) {
                             VF_ = 1;
                         } else {
                             VF_ = 0;
@@ -226,7 +231,12 @@ namespace chip8 {
                         return;
                     }
                     case 0xE: {
-                        // Todo
+                        if (config_.shift_set_VY_) {
+                            registers_[i.Nibble2()] = registers_[i.Nibble3()];
+                        }
+                        VF_ = (0b10000000 & registers_[i.Nibble2()]) ? 1 : 0;
+                        registers_[i.Nibble2()] = registers_[i.Nibble2()] << 1;
+                        return;
                     }
                 }
                 break;
@@ -240,6 +250,15 @@ namespace chip8 {
             case 0xA: // Set I;
             {
                 I_ = i.Nibble234();
+                return;
+            }
+            case 0xB: {
+                PC_ = i.Nibble234() + registers_[0];
+                return;
+            }
+            case 0xC:
+            {
+                registers_[i.Nibble2()] = (rand() % 256) & i.SecondByte();
                 return;
             }
             case 0xD: {
@@ -274,80 +293,12 @@ namespace chip8 {
                 }
                 return;
             }
+            case 0xE:
+            {
+                return;
+            }
         }
 
         std::cerr << "Unsupported instruction: " << "0x" << std::hex << i() << '\n';
-
-//        // Combine the two into an instruction
-//        if (first_byte == 0x00) {
-//            switch (second_byte) {
-//                case 0xE0: {
-//                    display_.Clear();
-//                    return;
-//                }
-////                case 0xEE: {
-////                    PC_ = stack_.Pop();
-////                    return;
-////                }
-//            }
-//        }
-//
-//        switch (nibble_1) {
-//            case 0x1:
-//            {
-//                PC_ = (RAM_[PC] & 0xf) << 8 | RAM_[PC + 1]; // Jump
-//                break;
-//            }
-////            case 0x2:
-////            {
-////                stack_.Push(PC);
-////                PC_ = (RAM_[PC] & 0xf) << 8 | RAM_[PC + 1]; // Jump
-////                break;
-////            }
-////            case 0x3:
-////            {
-////                if (registers_[nibble_2] == second_byte) {
-////                    PC_ += 2; // Skip
-////                }
-////                break;
-////            }
-////            case 0x4:
-////            {
-////                if (registers_[nibble_2] != second_byte) {
-////                    PC_ += 2; // Skip
-////                }
-////                break;
-////            }
-////            case 0x5:
-////            {
-////                if (registers_[nibble_2] == registers_[nibble_3]) {
-////                    PC_ += 2; // Skip
-////                }
-////                break;
-////            }
-//            case 0x6:
-//            {
-//                registers_[nibble_2] = second_byte; // Set
-//                break;
-//            }
-//            case 0x7:
-//            {
-//                registers_[nibble_2] += second_byte; // Add
-//                break;
-//            }
-////            case 0x9:
-////            {
-////                if (registers_[nibble_2] != registers_[nibble_3]) {
-////                    PC_ += 2; // Skip
-////                }
-////                break;
-////            }
-//            case 0xA:
-//            {
-//                I_ = nibble_2 << 8 | second_byte;
-//                break;
-//            }
-//
-//        }
     }
 } // chip8

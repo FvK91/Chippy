@@ -26,6 +26,10 @@ constexpr font f = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 };
 
 namespace chip8 {
+    struct Config {
+        bool shift_set_VY_{};
+    };
+
     class Instruction {
     public:
         Instruction(u_int8_t first_byte, u_int8_t second_byte);
@@ -54,7 +58,8 @@ namespace chip8 {
 
     class Interpreter {
     public:
-        Interpreter() {
+        Interpreter(Config config) :
+        config_(config) {
             std::copy(f.begin(), f.begin() + sizeof(f), RAM_.begin() + 0x50);
         }
 
@@ -83,6 +88,9 @@ namespace chip8 {
 
         // Display
         Display display_{};
+
+        // Config
+        Config config_;
     };
 
 } // chip8
