@@ -63,18 +63,13 @@ namespace chip8 {
         auto prev = next - delay;
 
         bool quit = false;
-        SDL_Event e;
         while (!quit) {
             auto now = std::chrono::steady_clock::now();
             //std::cout << ((now-prev) / 1ms) << '\n';
             prev = now;
 
             // Poll for SDL events
-            while (SDL_PollEvent(&e) != 0) {
-                if (e.type == SDL_QUIT) {
-                    quit = true;
-                }
-            }
+            keypad_.Update();
 
             // Fetch
             const auto i = FetchInstruction();
@@ -295,6 +290,17 @@ namespace chip8 {
             }
             case 0xE:
             {
+                switch(i.Nibble3()) {
+                    case 0x9:
+                    {
+                        return;
+                    }
+                    case 0xA:
+                    {
+
+                        return;
+                    }
+                }
                 return;
             }
         }

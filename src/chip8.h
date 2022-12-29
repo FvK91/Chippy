@@ -1,6 +1,7 @@
 #pragma once
 
 #include "display.h"
+#include "keypad.h"
 #include "stack.h"
 
 #include <array>
@@ -90,7 +91,10 @@ namespace chip8 {
         Display display_{};
 
         // Config
-        Config config_;
+        Config config_{};
+
+        // Keypad
+        Keypad keypad_{};
     };
 
 } // chip8
