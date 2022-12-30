@@ -290,7 +290,7 @@ namespace chip8 {
             }
             case 0xE:
             {
-                switch(i.Nibble3())
+                switch(i.SecondByte())
                 {
                     case 0x9E:
                     {
@@ -310,6 +310,71 @@ namespace chip8 {
                     }
                 }
                 return;
+            }
+            case 0xF:
+            {
+                switch(i.SecondByte()){
+                    case 0x07:
+                    {
+                        registers_[i.Nibble2()] = delay_timer_;
+                        return;
+                    }
+                    case 0x15:
+                    {
+                        delay_timer_ = registers_[i.Nibble2()];
+                        return;
+                    }
+                    case 0x18:
+                    {
+                        sound_timer_ = registers_[i.Nibble2()];
+                        return;
+                    }
+                    case 0x1E:
+                    {
+                        I_ += registers_[i.Nibble2()];
+                        return;
+                    }
+                    case 0x0A:
+                    {
+                        const auto key = keypad_.KeyPressed();
+                        if (!keypad_.KeyPressed(key)) {
+                            PC_ -= 2; // Loop
+                        }
+                        else {
+                            registers_[i.Nibble2()] = key;
+                        }
+                        return;
+                    }
+                    case 0x29:
+                    {
+                        I_ = font_address + registers_[i.Nibble2()] * 5;
+                        return;
+                    }
+                    case 0x33:
+                    {
+                        RAM_[I_] = registers_[i.Nibble2()] / 100 % 10;
+                        RAM_[I_ + 1] = registers_[i.Nibble2()] / 10 % 10;
+                        RAM_[I_ + 2] = registers_[i.Nibble2()] % 10;
+                        return;
+                    }
+                    case 0x55:
+                    {
+                        for (auto n = 0; n <= i.Nibble2() && n != sizeof(registers_); ++n) {
+                            RAM_[I_ + n] = registers_[n];
+                        }
+                        if (config_.fx55_incr_I_) {
+                            I_ += i.Nibble2() + 1;
+                        }
+                        return;
+                    }
+                    case 0x65:
+                    {
+                        for (auto n = 0; n <= i.Nibble2() && n != sizeof(registers_); ++n) {
+                            registers_[n] = RAM_[I_ + n];
+                        }
+                        return;
+                    }
+                }
             }
         }
 

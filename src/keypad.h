@@ -11,6 +11,8 @@ namespace chip8 {
 
         bool KeyPressed(int key) const;
 
+        u_int8_t KeyPressed() const;
+
         bool KeyDown(int key) const;
 
     private:

@@ -7,7 +7,7 @@
 #include <array>
 #include <filesystem>
 
-using font = std::array<u_int16_t, 80>;
+using font = std::array<u_int8_t, 80>;
 constexpr font f = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
                     0x20, 0x60, 0x20, 0x20, 0x70, // 1
                     0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -29,6 +29,8 @@ constexpr font f = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 namespace chip8 {
     struct Config {
         bool shift_set_VY_{};
+
+        bool fx55_incr_I_{ true };
     };
 
     class Instruction {
@@ -59,9 +61,11 @@ namespace chip8 {
 
     class Interpreter {
     public:
+        static constexpr auto font_address = 0x50;
+
         Interpreter(Config config) :
         config_(config) {
-            std::copy(f.begin(), f.begin() + sizeof(f), RAM_.begin() + 0x50);
+            std::copy(f.begin(), f.begin() + sizeof(f), RAM_.begin() + font_address);
         }
 
         int Run(const std::filesystem::path &path, const u_int16_t ips);

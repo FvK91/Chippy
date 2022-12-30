@@ -11,10 +11,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const auto ROM = "../dat/IBM_Logo.ch8";
-    // const auto ROM = "../dat/test_opcode.ch8";
+    // const auto ROM = "../dat/IBM_Logo.ch8";
+    const auto ROM = "../dat/test_opcode.ch8";
     // const auto ROM = "../dat/bc_test.ch8";
-    chip8_interpreter.Run(ROM, 10000);
+    // const auto ROM = "../dat/Puzzle.ch8";
+    chip8_interpreter.Run(ROM, 700);
 
     return 0;
 }
