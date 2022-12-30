@@ -45,7 +45,7 @@ bool Display::FlipPixel(const uint8_t x, const uint8_t y) {
 void Display::Render() const {
     SDL_SetRenderDrawColor(renderer_, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer_);
-    SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(renderer_, 0x66, 0xFF, 0x66, 0xFF);
     int x = 0;
     for (const auto &pixels_column: screen_) {
         int y = 0;

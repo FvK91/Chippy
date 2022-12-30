@@ -57,16 +57,15 @@ namespace chip8 {
         // Set PC
         PC_ = 0x200;
 
-        const auto delay = 1000ms / ips;
+        const auto delay_ips = 1000ms / ips;
+        constexpr auto delay = 1000ms / 60; // delay timer
 
-        auto next = std::chrono::steady_clock::now();
-        auto prev = next - delay;
+        auto next_ips = std::chrono::steady_clock::now();
+        auto next = std::chrono::steady_clock::now(); // delay timer
 
         bool quit = false;
         while (!quit) {
             auto now = std::chrono::steady_clock::now();
-            //std::cout << ((now-prev) / 1ms) << '\n';
-            prev = now;
 
             // Poll for SDL events
             keypad_.Update();
@@ -77,8 +76,7 @@ namespace chip8 {
             // We increment PC_ here already: next instruction
             PC_ += 2;
 
-            // std::cout << "Handling instruction: " << "0x" << std::hex << i() << '\n';
-            // std::cout << "Nibble1 " << std::to_string(i.Nibble1()) << '\n';
+            std::cout << "Handling instruction: " << "0x" << std::hex << i() << '\n';
 
             // Execute instruction
             ExecuteInstruction(i);
@@ -86,9 +84,15 @@ namespace chip8 {
             // Render display
             display_.Render();
 
+            // Update delay timer
+            if (now > next) {
+                ++delay_timer_;
+                next += delay;
+            }
+
             // Sleep until next
-            next += delay;
-            std::this_thread::sleep_until(next);
+            next_ips += delay_ips;
+            std::this_thread::sleep_until(next_ips);
         }
 
         return 0;
@@ -131,6 +135,10 @@ namespace chip8 {
         }
 
         switch (i.Nibble1()) {
+            case 0x0:
+            {
+                return;
+            }
             case 0x1: // Jump
             {
                 PC_ = i.Nibble234();
@@ -200,9 +208,9 @@ namespace chip8 {
                     case 0x5: // Subtract 1
                     {
                         if (registers_[i.Nibble2()] > registers_[i.Nibble3()]) {
-                            VF_ = 1;
+                            registers_[0xF] = 1;
                         } else {
-                            VF_ = 0;
+                            registers_[0xF] = 0;
                         }
                         registers_[i.Nibble2()] -= registers_[i.Nibble3()];
                         return;
@@ -211,16 +219,16 @@ namespace chip8 {
                         if (config_.shift_set_VY_) {
                             registers_[i.Nibble2()] = registers_[i.Nibble3()];
                         }
-                        VF_ = (1 & registers_[i.Nibble2()]) ? 1 : 0;
+                        registers_[0xF] = (1 & registers_[i.Nibble2()]) ? 1 : 0;
                         registers_[i.Nibble2()] = registers_[i.Nibble2()] >> 1;
                         return;
                     }
                     case 0x7: // Subtract 2
                     {
                         if (registers_[i.Nibble3()] > registers_[i.Nibble2()]) {
-                            VF_ = 1;
+                            registers_[0xF] = 1;
                         } else {
-                            VF_ = 0;
+                            registers_[0xF] = 0;
                         }
                         registers_[i.Nibble2()] = registers_[i.Nibble3()] - registers_[i.Nibble2()];
                         return;
@@ -229,7 +237,7 @@ namespace chip8 {
                         if (config_.shift_set_VY_) {
                             registers_[i.Nibble2()] = registers_[i.Nibble3()];
                         }
-                        VF_ = (0b10000000 & registers_[i.Nibble2()]) ? 1 : 0;
+                        registers_[0xF] = (0b10000000 & registers_[i.Nibble2()]) ? 1 : 0;
                         registers_[i.Nibble2()] = registers_[i.Nibble2()] << 1;
                         return;
                     }
@@ -260,7 +268,7 @@ namespace chip8 {
                 // Wrap when going over the edge of screen
                 const auto X = registers_[i.Nibble2()] % PIXELS_X;
                 auto y = registers_[i.Nibble3()] % PIXELS_Y;
-                VF_ = 0;
+                registers_[0xF] = 0;
 
                 for (auto n = 0; n < i.Nibble4(); ++n) {
                     auto x = X;
@@ -269,7 +277,7 @@ namespace chip8 {
                         if (sprite & (1 << bit)) {
                             // std::cout << "Flip pixel: " << x << " " << y << '\n';
                             if (display_.FlipPixel(x, y)) {
-                                VF_ = 1;
+                                registers_[0xF] = 1;
                             }
                         }
                         ++x;

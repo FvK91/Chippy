@@ -30,7 +30,7 @@ namespace chip8 {
     struct Config {
         bool shift_set_VY_{};
 
-        bool fx55_incr_I_{ true };
+        bool fx55_incr_I_{ false };
     };
 
     class Instruction {
@@ -82,7 +82,6 @@ namespace chip8 {
         std::array<u_int8_t, 4096> RAM_{};
         std::array<u_int8_t, 16> registers_{}; // 0 through F
         u_int16_t I_{}; // I register
-        u_int8_t VF_{}; // Flag register, used as a flag by some instructions
         u_int8_t delay_timer_{};
         u_int8_t sound_timer_{};
 
