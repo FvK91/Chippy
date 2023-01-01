@@ -4,6 +4,16 @@
 
 int main(int argc, char *argv[]) {
 
+    while(true) {
+        std::cout << '\a' << std::endl;
+        std::cout << '\a' << std::endl;
+        std::cout << '\a' << std::endl;
+        std::cout << '\a' << std::endl;
+        std::cout << '\a' << std::endl;
+        std::cout << '\a' << std::endl;
+
+    }
+
     chip8::Interpreter chip8_interpreter{{}};
 
     if (!chip8_interpreter.GetDisp().IsInitialized()) {

@@ -87,6 +87,7 @@ namespace chip8 {
             // Update delay timer
             if (now > next) {
                 ++delay_timer_;
+                ++sound_timer_;
                 next += delay;
             }
 
