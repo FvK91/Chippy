@@ -13,6 +13,7 @@ namespace chip8 {
 
     u_int16_t stack::Pop() {
         if (SP_ == 0) {
+            std::cerr << "STACK UNDERFLOW\n";
             return 0;
         }
         return stack_[--SP_];

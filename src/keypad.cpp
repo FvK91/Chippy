@@ -17,12 +17,11 @@ const std::map<int, u_int16_t> chip8::Keypad::keyboard_mapping_ = {{SDL_SCANCODE
                                                                    {SDL_SCANCODE_F, 14},
                                                                    {SDL_SCANCODE_V, 15},};
 
-void chip8::Keypad::Update() {
+void chip8::Keypad::Update(bool &quit) {
     // Save previous keyboard state
     prev_keyboard_state_ = keyboard_state_;
 
     SDL_Event event;
-    bool quit = false;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             quit = true;
@@ -32,7 +31,7 @@ void chip8::Keypad::Update() {
     // Reset current state
     keyboard_state_ = {};
 
-    const auto keyboard_state = SDL_GetKeyboardState(NULL);
+    const auto keyboard_state = SDL_GetKeyboardState(nullptr);
     for (const auto [scancode, index]: keyboard_mapping_) {
         if (keyboard_state[scancode]) {
             keyboard_state_ |= 1 << index;

@@ -19,9 +19,9 @@ public:
 
     ~Display();
 
-    bool IsInitialized() const;
+    [[nodiscard]] bool IsInitialized() const;
 
-    bool FlipPixel(const uint8_t x, const uint8_t y); // Returns true when flipped off
+    bool FlipPixel(uint8_t x, uint8_t y); // Returns true when flipped off
 
     void Render() const;
 

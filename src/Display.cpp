@@ -1,17 +1,11 @@
-#include "Display.h"
+#include "display.h"
 
 #include <iostream>
 
 Display::Display() {
     SDL_Init(SDL_INIT_VIDEO);
-    window_ = SDL_CreateWindow(
-            "Chippy - a CHIP-8 interpreter",
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            SCREEN_WIDTH,
-            SCREEN_HEIGHT,
-            SDL_WINDOW_SHOWN
-    );
+    window_ = SDL_CreateWindow("Chippy - a CHIP-8 interpreter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                               SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 }
 

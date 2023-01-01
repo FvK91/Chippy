@@ -2,13 +2,11 @@
 
 #include <array>
 
-// ToDo, stack overflow error
-
 namespace chip8 {
 
     class stack {
     public:
-        void Push(const u_int16_t addr);
+        void Push(u_int16_t addr);
 
         u_int16_t Pop();
 

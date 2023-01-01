@@ -7,13 +7,13 @@
 namespace chip8 {
     class Keypad {
     public:
-        void Update();
+        void Update(bool &quit);
 
-        bool KeyPressed(int key) const;
+        [[nodiscard]] bool KeyPressed(int key) const;
 
-        u_int8_t KeyPressed() const;
+        [[nodiscard]] u_int8_t KeyPressed() const;
 
-        bool KeyDown(int key) const;
+        [[nodiscard]] bool KeyDown(int key) const;
 
     private:
 

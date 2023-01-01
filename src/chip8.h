@@ -37,66 +37,54 @@ namespace chip8 {
     public:
         Instruction(u_int8_t first_byte, u_int8_t second_byte);
 
-        u_int8_t FirstByte() const;
+        [[nodiscard]] u_int8_t B2() const; // Byte 2
 
-        u_int8_t SecondByte() const;
+        [[nodiscard]] u_int8_t N1() const; // Nibble 1
 
-        u_int8_t Nibble1() const;
+        [[nodiscard]] u_int8_t N2() const; // Nibble 2
 
-        u_int8_t Nibble2() const;
+        [[nodiscard]] u_int8_t N3() const; // Nibble 3
 
-        u_int8_t Nibble3() const;
+        [[nodiscard]] u_int8_t N4() const; // Nibble 4
 
-        u_int8_t Nibble4() const;
-
-        u_int16_t Nibble234() const;
+        [[nodiscard]] u_int16_t N234() const; // Nibbles 234
 
         u_int16_t operator()() const;
 
     private:
-        u_int8_t first_byte_{};
+        u_int8_t byte1_{};
 
-        u_int8_t second_byte_{};
+        u_int8_t byte2_{};
     };
 
     class Interpreter {
     public:
         static constexpr auto font_address = 0x50;
 
-        Interpreter(Config config) :
-        config_(config) {
+        explicit Interpreter(Config config) : config_(config) {
             std::copy(f.begin(), f.begin() + sizeof(f), RAM_.begin() + font_address);
         }
 
-        int Run(const std::filesystem::path &path, const u_int16_t ips);
+        int Run(const std::filesystem::path &path, u_int16_t ips);
 
-        const Display &GetDisp() const;
+        [[nodiscard]] const Display &GetDisplay() const;
 
     private:
-        Instruction FetchInstruction() const;
+        [[nodiscard]] Instruction FetchInstruction() const;
 
         void ExecuteInstruction(Instruction i);
 
         int LoadROM(const std::filesystem::path &path);
 
         std::array<u_int8_t, 4096> RAM_{};
-        std::array<u_int8_t, 16> registers_{}; // 0 through F
+        std::array<u_int8_t, 16> V_{}; // Registers 0..F
         u_int16_t I_{}; // I register
         u_int8_t delay_timer_{};
         u_int8_t sound_timer_{};
-
-        int16_t PC_{}; // Program Counter, pointing to current instruction in memory
-
-        // Stack
+        u_int16_t PC_{}; // Program Counter, pointing to current instruction in memory
         stack stack_{};
-
-        // Display
         Display display_{};
-
-        // Config
         Config config_{};
-
-        // Keypad
         Keypad keypad_{};
     };
 
