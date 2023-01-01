@@ -1,8 +1,23 @@
 #include <iostream>
+#include <filesystem>
 
 #include "chip8.h"
 
 int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        std::cout << "Add path to ROM as input argument\n";
+        return 1;
+    }
+    else if (argc > 2) {
+        std::cout << "Too many input parameters\n";
+        return 1;
+    }
+
+    const auto ROM = argv[1];
+    if (!std::filesystem::exists(ROM)) {
+        std::cerr << "Invalid ROM path\n";
+    }
+
     chip8::Config config{ false, true };
 
     chip8::Interpreter chip8_interpreter{config};
@@ -12,13 +27,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // const auto ROM = "../dat/IBM_Logo.ch8";
-    // const auto ROM = "../dat/test_opcode.ch8";
-    // const auto ROM = "../dat/bc_test.ch8";
-    // const auto ROM = "../dat/Puzzle.ch8";
-    // const auto ROM = "../dat/Airplane.ch8";
-    const auto ROM = "../dat/15puzzle.ch8";
-    chip8_interpreter.Run(ROM, 1000);
+    chip8_interpreter.Run(ROM, 10000);
 
     return 0;
 }
