@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    chip8_interpreter.Run(ROM, 10000);
+    chip8_interpreter.Run(ROM, 700);
 
     return 0;
 }
