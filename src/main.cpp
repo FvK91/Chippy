@@ -5,9 +5,9 @@
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        std::cout << "Add path to ROM as input argument\n";
+        std::cout << "Add path to ROM as input argument. [Optional parameter: IPS]\n";
         return 1;
-    } else if (argc > 2) {
+    } else if (argc > 3) {
         std::cout << "Too many input parameters\n";
         return 1;
     }
@@ -17,7 +17,13 @@ int main(int argc, char *argv[]) {
         std::cerr << "Invalid ROM path\n";
     }
 
-    chip8::Config config{false, true};
+    // Instructions per second
+    auto IPS = 1000;
+    if (argc == 3) {
+        IPS = std::atoi(argv[2]);
+    }
+
+    chip8::Config config{false, false};
 
     chip8::Interpreter chip8_interpreter{config};
 
@@ -26,7 +32,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    chip8_interpreter.Run(ROM, 700);
+    chip8_interpreter.Run(ROM, IPS);
 
     return 0;
 }
