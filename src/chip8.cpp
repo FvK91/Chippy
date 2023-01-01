@@ -183,7 +183,7 @@ namespace chip8 {
                 switch (i.Nibble4()) {
                     case 0x0: // Set
                     {
-                        registers_[i.Nibble2()] = i.Nibble3();
+                        registers_[i.Nibble2()] = registers_[i.Nibble3()];
                         return;
                     }
                     case 0x1: // Binary OR
@@ -276,7 +276,6 @@ namespace chip8 {
                     const auto sprite = RAM_[I_ + n];
                     for (auto bit = 7; bit >= 0; --bit) {
                         if (sprite & (1 << bit)) {
-                            // std::cout << "Flip pixel: " << x << " " << y << '\n';
                             if (display_.FlipPixel(x, y)) {
                                 registers_[0xF] = 1;
                             }

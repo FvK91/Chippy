@@ -30,7 +30,7 @@ namespace chip8 {
     struct Config {
         bool shift_set_VY_{};
 
-        bool fx55_incr_I_{ false };
+        bool fx55_incr_I_{};
     };
 
     class Instruction {

@@ -1,8 +1,11 @@
 #include "stack.h"
 
+#include <iostream>
+
 namespace chip8 {
     void stack::Push(const u_int16_t addr) {
         if (SP_ == stack_.size()) {
+            std::cerr << "STACK OVERFLOW\n";
             return; // Stack overflow..
         }
         stack_[SP_++] = addr;
