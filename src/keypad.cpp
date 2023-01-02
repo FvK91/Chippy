@@ -45,7 +45,7 @@ bool chip8::Keypad::KeyPressed(int key) const {
 }
 
 u_int8_t chip8::Keypad::KeyPressed() const {
-    for (auto k = 0; k < sizeof(keyboard_state_); ++k) {
+    for (auto k = 0; k < sizeof(keyboard_state_) * 8; ++k) {
         if (KeyPressed(k)) {
             return k;
         }
