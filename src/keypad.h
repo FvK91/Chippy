@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 
 #include <SDL2/SDL.h>
 
@@ -21,6 +21,6 @@ namespace chip8 {
 
         u_int16_t prev_keyboard_state_{}; // Previous state
 
-        static const std::map<int, u_int16_t> keyboard_mapping_;
+        static const std::unordered_map<int, u_int16_t> keyboard_mapping_;
     };
 }

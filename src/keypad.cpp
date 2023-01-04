@@ -1,6 +1,6 @@
 #include "keypad.h"
 
-const std::map<int, u_int16_t> chip8::Keypad::keyboard_mapping_ = {{SDL_SCANCODE_X, 0},
+const std::unordered_map<int, u_int16_t> chip8::Keypad::keyboard_mapping_ = {{SDL_SCANCODE_X, 0},
                                                                    {SDL_SCANCODE_1, 1},
                                                                    {SDL_SCANCODE_2, 2},
                                                                    {SDL_SCANCODE_3, 3},
